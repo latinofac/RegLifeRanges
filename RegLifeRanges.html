@@ -1,0 +1,579 @@
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-br" xml:lang="pt-br">
+<head>
+<meta charset="utf-8"/>
+<style>
+div{color:#fcb900;font-weight: bold;font-size:20pt;padding:20px;overflow:hidden}
+img{width:15%;height:auto;}
+button{background-color:#ff6900;color:yellow;border: 2px solid red;border-radius: 25px;width:100px;height:40px}
+</style>
+</head>
+<body onLoad="setCards()" style="background-color:black;">
+<div align="center" style="float:left;width:10%">
+<a href="https://site.reglife.com.br/" target="_blank">
+<img src="https://raw.githubusercontent.com/latinofac/OpenTracker/master/OpenTracker/Images/regLifeLogo.jpg" style="width:80%"/>
+</a>
+</div>
+<div align="center" id ="stack" style="float:left;width:30%">Stack Efetivo: 100</div>
+<div align="center" id="position">Posição: Button vs UTG</div>
+<div align="center" style="float:left;width:60%">
+<img id="cardOne" src="https://raw.githubusercontent.com/latinofac/OpenTracker/master/OpenTracker/Images/redCard.jpg" width="50"/>
+<img id="cardTwo" src="https://raw.githubusercontent.com/latinofac/OpenTracker/master/OpenTracker/Images/redCard.jpg" width="50"/>
+</div>
+<div>
+PONTUAÇÃO<br>
+Corretas: <label id="correctAnswers">0</label><br>
+Erradas: <label id="wrongAnswers">0</label><br>
+</div>
+<div align="center" style="float:left;width:25%"><button onClick="fold()" type="button">FOLD</button></div>
+<div align="center" style="float:left;width:25%"><button onClick="call()" type="button">CALL</button></div>
+<div align="center" style="float:left;width:25%"><button onClick="raise()" type="button">RAISE</button></div>
+<div align="center" style="float:right;">
+<input type="hidden" id="cardone" value="redCard">
+<input type="hidden" id="cardtwo" value="redCard">
+<input type="hidden" id="scenary" value="1">
+</div>
+<div style="width:100%;padding-top:30px">
+<label>Escolher cenário:</label><br>
+<select id="cboScenary" style="border-radius:36px;" onchange="setScenary()">
+  <option value="0">Aleatório</option>
+  <option value="1">Button vs UTG</option>
+  <option value="2">BB vs UTG</option>
+  <option value="3">MP vs UTG</option>
+  <option value="4">LJ vs UTG</option>
+  <option value="5">HJ vs UTG</option>
+  <option value="6">CO vs UTG</option>
+  <option value="7">SB vs UTG</option>
+  <option value="8">LJ vs MP</option>
+  <option value="9">HJ vs MP</option>
+  <option value="A">CO vs MP</option>
+  <option value="B">Button vs MP</option>
+  <option value="C">SB vs MP</option>
+  <option value="D">BB vs MP</option>
+  <option value="E">HJ vs LJ</option>
+  <option value="F">CO vs LJ</option>
+  <option value="G">Button vs LJ</option>
+  <option value="H">SB vs LJ</option>
+  <option value="I">BB vs LJ</option>
+  <option value="J">CO vs HJ</option>
+  <option value="K">Button vs HJ</option>
+  <option value="L">SB vs HJ</option>
+  <option value="M">BB vs HJ</option>
+  <option value="N">Button vs CO</option>
+  <option value="O">SB vs CO</option>
+  <option value="P">BB vs CO</option>
+  <option value="Q">SB vs Button</option>
+  <option value="R">BB vs Button</option>
+  <option value="S">BB vs SB</option>
+</select>
+</div>
+<script type="text/javascript">
+function getRandomCard(){
+   var result           = '';
+   var characters       = 'A23456789TJQK';
+   var charactersLength = characters.length;
+   for ( var i = 0; i < 1; i++ ) {
+         result += characters.charAt(Math.floor(Math.random() *
+    charactersLength));
+      }
+   characters       = 'cshd';
+   charactersLength = characters.length;
+   for ( var i = 0; i < 1; i++ ) {
+            result += characters.charAt(Math.floor(Math.random() *
+       charactersLength));
+      }
+
+   return result;
+}
+
+function setScenary(){
+   var result           = '';
+   var characters       = '123456789ABCDEFGHIJKLMNOPQRS';
+   var charactersLength = characters.length;
+   for ( var i = 0; i < 1; i++ ) {
+         result += characters.charAt(Math.floor(Math.random() *
+    charactersLength));
+      }
+   var cboscenary = document.getElementById("cboScenary").value
+   if (cboscenary != 0){
+      result = cboscenary;
+   }
+   document.getElementById("scenary").value = result;
+   //SCENARY
+   // 1. Button vs UTG - 100BBs
+   // 2. BB vs UTG - 100BBs
+   // 3. MP vs UTG - 100BBs
+   // 4. LJ vs UTG - 100BBs
+   // 5. HJ vs UTG - 100BBs
+   // 6. CO vs UTG - 100BBs
+   // 7. SB vs UTG - 100BBs
+   // 8. LJ vs MP - 100BBs
+   // 9. HJ vs MP - 100BBs
+   // A. CO vs MP - 100BBs
+   // B. Button vs MP - 100BBs
+   // C. SB vs MP - 100BBs
+   // D. BB vs MP - 100BBs
+   // E. HJ vs LJ - 100BBs
+   // F. CO vs LJ - 100BBs
+   // G. Button vs LJ - 100BBs
+   // H. SB vs LJ - 100BBs
+   // I. BB vs LJ - 100BBs
+   // J. CO vs HJ - 100BBs
+   // K. Button vs HJ - 100BBs
+   // L. SB vs HJ - 100BBs
+   // M. BB vs HJ - 100BBs
+   // N. Button vs CO - 100BBs
+   // O. SB vs CO - 100BBs
+   // P. BB vs CO - 100BBs
+   // Q. SB vs Button - 100BBs
+   // R. BB vs Button - 100BBs
+   // S. BB vs SB - 100BBs
+
+   if (result == "1"){
+      document.getElementById("position").innerHTML = "Posição: Button vs UTG";
+      document.getElementById("stack").innerHTML = "Stack Efetivo: 100";
+   }
+   if (result == "2"){
+      document.getElementById("position").innerHTML = "Posição: BB vs UTG";
+      document.getElementById("stack").innerHTML = "Stack Efetivo: 100";
+   }
+   if (result == "3"){
+      document.getElementById("position").innerHTML = "Posição: MP vs UTG";
+      document.getElementById("stack").innerHTML = "Stack Efetivo: 100";
+   }
+   if (result == "4"){
+      document.getElementById("position").innerHTML = "Posição: LJ vs UTG";
+      document.getElementById("stack").innerHTML = "Stack Efetivo: 100";
+   }
+   if (result == "5"){
+      document.getElementById("position").innerHTML = "Posição: HJ vs UTG";
+      document.getElementById("stack").innerHTML = "Stack Efetivo: 100";
+   }
+   if (result == "6"){
+      document.getElementById("position").innerHTML = "Posição: CO vs UTG";
+      document.getElementById("stack").innerHTML = "Stack Efetivo: 100";
+   }
+   if (result == "7"){
+      document.getElementById("position").innerHTML = "Posição: SB vs UTG";
+      document.getElementById("stack").innerHTML = "Stack Efetivo: 100";
+   }
+   if (result == "8"){
+      document.getElementById("position").innerHTML = "Posição: LJ vs MP";
+      document.getElementById("stack").innerHTML = "Stack Efetivo: 100";
+   }
+   if (result == "9"){
+      document.getElementById("position").innerHTML = "Posição: HJ vs MP";
+      document.getElementById("stack").innerHTML = "Stack Efetivo: 100";
+   }
+   if (result == "A"){
+      document.getElementById("position").innerHTML = "Posição: CO vs MP";
+      document.getElementById("stack").innerHTML = "Stack Efetivo: 100";
+   }
+   if (result == "B"){
+      document.getElementById("position").innerHTML = "Posição: Button vs MP";
+      document.getElementById("stack").innerHTML = "Stack Efetivo: 100";
+   }
+   if (result == "C"){
+      document.getElementById("position").innerHTML = "Posição: SB vs MP";
+      document.getElementById("stack").innerHTML = "Stack Efetivo: 100";
+   }
+   if (result == "D"){
+      document.getElementById("position").innerHTML = "Posição: BB vs MP";
+      document.getElementById("stack").innerHTML = "Stack Efetivo: 100";
+   }
+   if (result == "E"){
+      document.getElementById("position").innerHTML = "Posição: HJ vs LJ";
+      document.getElementById("stack").innerHTML = "Stack Efetivo: 100";
+   }
+   if (result == "F"){
+      document.getElementById("position").innerHTML = "Posição: CO vs LJ";
+      document.getElementById("stack").innerHTML = "Stack Efetivo: 100";
+   }
+   if (result == "G"){
+      document.getElementById("position").innerHTML = "Posição: Button vs LJ";
+      document.getElementById("stack").innerHTML = "Stack Efetivo: 100";
+   }
+   if (result == "H"){
+      document.getElementById("position").innerHTML = "Posição: SB vs LJ";
+      document.getElementById("stack").innerHTML = "Stack Efetivo: 100";
+   }
+   if (result == "I"){
+      document.getElementById("position").innerHTML = "Posição: BB vs LJ";
+      document.getElementById("stack").innerHTML = "Stack Efetivo: 100";
+   }
+   if (result == "J"){
+      document.getElementById("position").innerHTML = "Posição: CO vs HJ";
+      document.getElementById("stack").innerHTML = "Stack Efetivo: 100";
+   }
+   if (result == "K"){
+      document.getElementById("position").innerHTML = "Posição: Button vs HJ";
+      document.getElementById("stack").innerHTML = "Stack Efetivo: 100";
+   }
+   if (result == "L"){
+      document.getElementById("position").innerHTML = "Posição: SB vs HJ";
+      document.getElementById("stack").innerHTML = "Stack Efetivo: 100";
+   }
+   if (result == "M"){
+      document.getElementById("position").innerHTML = "Posição: BB vs HJ";
+      document.getElementById("stack").innerHTML = "Stack Efetivo: 100";
+   }
+   if (result == "N"){
+      document.getElementById("position").innerHTML = "Posição: Button vs CO";
+      document.getElementById("stack").innerHTML = "Stack Efetivo: 100";
+   }
+   if (result == "O"){
+      document.getElementById("position").innerHTML = "Posição: SB vs CO";
+      document.getElementById("stack").innerHTML = "Stack Efetivo: 100";
+   }
+   if (result == "P"){
+      document.getElementById("position").innerHTML = "Posição: BB vs CO";
+      document.getElementById("stack").innerHTML = "Stack Efetivo: 100";
+   }
+   if (result == "Q"){
+      document.getElementById("position").innerHTML = "Posição: SB vs Button";
+      document.getElementById("stack").innerHTML = "Stack Efetivo: 100";
+   }
+   if (result == "R"){
+      document.getElementById("position").innerHTML = "Posição: BB vs Button";
+      document.getElementById("stack").innerHTML = "Stack Efetivo: 100";
+   }
+   if (result == "S"){
+      document.getElementById("position").innerHTML = "Posição: BB vs SB";
+      document.getElementById("stack").innerHTML = "Stack Efetivo: 100";
+   }
+   return;
+}
+
+function setCards(){
+   var card1 = getRandomCard();
+   var card2 = getRandomCard();
+   while (card1 == card2){
+      card2 = getRandomCard();
+   }
+   //card1 = "3c";
+   //card2 = "3s";
+   document.getElementById("cardone").value = card1;
+   document.getElementById("cardtwo").value = card2;
+   document.getElementById("cardOne").src="https://raw.githubusercontent.com/latinofac/OpenTracker/master/OpenTracker/Images/" + card1 + ".jpg";
+   document.getElementById("cardTwo").src="https://raw.githubusercontent.com/latinofac/OpenTracker/master/OpenTracker/Images/" + card2 + ".jpg";
+
+   setScenary();
+
+   return;
+}
+
+function getRangeOfRaise(typeOfCards,scenary){
+
+   var ranges = [["6789TJQKA","45789TJQKA","6789TJ","89TJ","89T","89","8","7","6","5","4","","","TJQK","JQ","J","","","","","","","","",""], // 1. Button vs UTG - 100BBs
+                 ["TJQKA","24578TJQK","69TJQ","9TJ","9T","89","8","7","6","5","4","","","TJQK","JQ","","","","","","","","","",""],          // 2. BB vs UTG - 100BBs
+                 ["56789TJQKA","4589TJQK","9TJQ","TJ","T","9","","","6","5","4","","","JQK","Q","","","","","","","","","",""],              // 3. MP vs UTG - 100BBs
+                 ["56789TJQKA","4589TJQK","9TJQ","TJ","T","9","","7","6","5","4","","","JQK","Q","","","","","","","","","",""],             // 4. LJ vs UTG - 100BBs
+                 ["456789TJQKA","45789TJQK","9TJQ","TJ","9T","89","8","7","6","5","4","","","JQK","Q","","","","","","","","","",""],        // 5. HJ vs UTG - 100BBs
+                 ["56789TJQKA","3456789TJQK","9TJQ","9TJ","9T","89","8","7","6","5","4","","","TJQK","JQ","","","","","","","","","",""],    // 6. CO vs UTG - 100BBs
+                 ["89TJQKA","45678TJQK","679TJQ","9TJ","9T","89","8","7","6","5","4","","","JQK","Q","","","","","","","","","",""],         // 7. SB vs UTG - 100BBs
+                 ["56789TJQKA","45789TJQK","9TJQ","TJ","9T","9","","7","6","5","4","","","JQK","Q","","","","","","","","","",""],           // 8. LJ vs MP - 100BBs
+                 ["456789TJQKA","45789TJQK","9TJQ","TJ","9T","89","8","7","6","5","4","","","JQK","JQ","","","","","","","","","",""],       // 9. HJ vs MP - 100BBs
+                 ["56789TJQKA","3456789TJQK","6789TJQ","9TJ","9T","89","8","7","6","5","4","","","TJQK","JQ","","","","","","","","","",""], // 10. CO vs MP - 100BBs
+                 ["6789TJQKA","45789TJQK","56789TJ","89TJ","89T","89","8","7","6","5","4","","","TJQK","JQ","J","","","","","","","","",""], // 11. Button vs MP - 100BBs
+                 ["789TJQKA","456789TJQK","6789TJQ","9TJ","9T","89","8","7","6","5","4","","","JQK","Q","","","","","","","","","",""],      // 12. SB vs MP - 100BBs
+                 ["TJQKA","3456789TQK","678TJQ","89TJ","9T","89","78","7","6","5","4","","","5TJQK","JQ","","","","","","","","","",""],     // 13. BB vs MP - 100BBs
+                 ["456789TJQKA","3456789TJQK","689TJQ","9TJ","9T","89","8","7","6","5","4","","","TJQK","JQ","","","","","","","","","",""], // 14. HJ vs LJ - 100BBs
+                 ["456789TJQKA","23456789TJQK","6789TJQ","9TJ","9T","89","8","7","6","5","4","","","TJQK","JQ","J","","","","","","","","",""],// 15. CO vs LJ - 100BBs
+                 ["56789TJQKA","3456789TJQK","56789TJQ","89TJ","89","89","78","7","6","5","4","","","9TJQK","TJQ","TJ","","","","","","","","",""],// 16. Button vs LJ - 100BBs
+                 ["789TJQKA","456789TJQK","6789TJQ","9T","9T","89","78","7","6","5","4","","","TJQK","JQ","","","","","","","","","",""],     // 17. SB vs LJ - 100BBs
+                 ["9TJQKA","23456789QK","679TJQ","89TJ","89T","89","78","67","6","5","4","","","5TJQK","TJQ","","","","","","","","","",""],  // 18. BB vs LJ - 100BBs
+                 ["56789TJQKA","23456789TJQK","56789TJQ","89TJ","89T","89","8","7","6","5","4","","","TJQK","JQ","TJ","T","","","","","","","",""],   // 19. CO vs HJ - 100BBs
+                 ["6789TJQKA","3456789JQK","456789TJQ","689TJ","789T","789","78","7","6","5","4","","","9TJQK","TJQ","TJ","T","","","","","","","",""],// 20. Button vs HJ - 100BBs
+                 ["789TJQKA","456789TJQK","679TJQ","89TJ","89T","89","78","67","6","5","4","","","TJQK","JQ","J","","","","","","","","",""], // 21. SB vs HJ - 100BBs
+                 ["9TJQKA","456789QK","5679TJQ","689TJ","89T","89","78","67","6","5","4","","","34579TJQK","TJQ","TJ","","","","","","","","",""], // 22. BB vs HJ - 100BBs
+                 ["56789TJQKA","23456789JQK","3456789TJQ","56789TJ","789T","789","78","67","6","5","4","","","89TJQK","TJQ","TJ","T","","","","","","","",""], // 23. Button vs CO - 100BBs
+                 ["6789TJQKA","456789TJQK","6789TJQ","689TJ","89T","789","78","67","6","5","4","","","TJQK","TJQ","TJ","T","","","","","","","",""], // 24. SB vs CO - 100BBs
+                 ["89TJQKA","345678JQK","456789TJQ","5689","789T","789","78","67","6","5","4","","","456789TJQK","9TJQ","TJ","","","","","","","","",""], // 25. BB vs CO - 100BBs
+                 ["6789TJQKA","23456789TJQK","456789TJQ","56789TJ","789T","789","78","67","6","5","4","","","89TJQK","TJQ","TJ","T","","","","","","","",""], // 26. SB vs Button - 100BBs
+                 ["6789TJQKA","345TJQK","3456TJQ","456J","5679T","6789","678","567","56","45","34","","","45678JQK","456789TJQ","56789TJ","89T","89","","","","","","",""], // 27. BB vs Button - 100BBs
+                 ["TJQKA","34579TJQK","367TJQ","T","29T","23489","78","7","6","5","4","","","23467TJQK","456789JQ","45689J","789","78","7","","","","","",""]];// 28. BB vs SB - 100BBs
+
+   //1. PAIRS
+   //2. ACE SUITED
+   //3. KING SUITED
+   //4. QUEEN SUITED
+   //5. JACK SUITED
+   //6. TEN SUITED
+   //7. NINE SUITED
+   //8. EIGHT SUITED
+   //9. SEVEN SUITED
+   //10.SIX SUITED
+   //11.FIVE SUITED
+   //12.FOUR SUITED
+   //13.THREE SUITED
+   //14.ACE OFF-SUITED
+   //15.KING OFF-SUITED
+   //16.QUEEN OFF-SUITED
+   //17.JACK OFF-SUITED
+   //18.TEN OFF-SUITED
+   //19.NINE OFF-SUITED
+   //20.EIGHT OFF-SUITED
+   //21.SEVEN OFF-SUITED
+   //22.SIX OFF-SUITED
+   //23.FIVE OFF-SUITED
+   //24.FOUR OFF-SUITED
+   //25.THREE OFF-SUITED
+
+   return ranges[parseInt(scenary) - 1][parseInt(typeOfCards) - 1];
+}
+
+function getRangeOfCall(typeOfCards,scenary){
+
+   var ranges = [["23456789TJQK","23456789TJQ","56789TJQ","89TJ","89T","789","78","67","56","45","34","3","","TJQK","TJQ","TJ","T","","","","","","","",""], // 1. Button vs UTG - 100BBs
+                 ["23456789TJQ","23456789TJQ","23456789TJQ","23456789TJ","23456789T","23456789","2345678","234567","3456","2345","234","23","2","3456789TJQK","6789TJQ","9TJ","89T","89","78","67","56","45","34","",""], // 2. BB vs UTG - 100BBs
+                 ["23456789TJQK","345789TJQ","TJQ","TJ","T","9","8","7","6","5","4","","","QK","","","","","","","","","","",""],                            // 3. MP vs UTG - 100BBs
+                 ["23456789TJQK","345789TJQ","9TJQ","TJ","9T","9","8","7","6","5","4","","","QK","Q","","","","","","","","","",""],                         // 4. LJ vs UTG - 100BBs
+                 ["23456789TJQK","3456789TJQ","9TJQ","TJ","9T","89","8","7","6","5","4","","","JQK","Q","","","","","","","","","",""],                      // 5. HJ vs UTG - 100BBs
+                 ["23456789TJQK","23456789TJQ","6789TJQ","9TJ","89T","89","78","67","6","5","4","","","JQK","TJQ","","T","","","","","","","",""],           // 6. CO vs UTG - 100BBs
+                 ["23456789TJQ","23456789TQ","56789TJ","9TJ","89T","789","78","67","6","5","4","","","TJQK","JQ","TJ","T","","","","","","","",""],          // 7. SB vs UTG - 100BBs
+                 ["23456789TJQK","345789TJQ","9TJQ","TJ","9T","9","8","7","6","5","4","","","JQK","Q","","","","","","","","","",""],                        // 8. LJ vs MP - 100BBs
+                 ["23456789TJQK","345789TJQ","9TJQ","9TJ","9T","89","8","7","6","5","4","","","JQK","Q","","","","","","","","","",""],                      // 9. HJ vs MP - 100BBs
+                 ["23456789TJQK","23456789TJQ","6789TJQ","9TJ","9T","89","78","67","6","5","4","","","TJQK","JQ","TJ","T","","","","","","","",""],          // 10. CO vs MP - 100BBs
+                 ["23456789TJQ","23456789TJQ","456789TJQ","89TJ","89T","789","678","67","56","45","34","","","TJQK","TJQ","TJ","T","","","","","","","",""], // 11. Button vs MP - 100BBs
+                 ["23456789TJQ","23456789TJQ","56789TJQ","89TJ","89T","89","78","67","6","5","4","","","TJQK","JQ","TJ","T","","","","","","","",""],        // 12. SB vs MP - 100BBs
+                 ["23456789TJQ","23456789TJQ","23456789TJQ","23456789TJ","23456789T","23456789","2345678","234567","3456","2345","234","23","2","3456789TJQK","56789TJQ","89TJ","89T","89","78","67","56","45","34","",""], // 13. BB vs MP - 100BBs
+                 ["23456789TJQ","3456789TJQ","69TJQ","9TJ","9T","89","8","7","6","5","4","","","JQK","JQ","","","","","","","","","",""],                    // 14. HJ vs LJ - 100BBs
+                 ["23456789TJQ","23456789TJQ","6789TJQ","9TJ","9T","89","78","7","6","5","4","","","TJQK","JQ","J","T","","","","","","","",""],             // 15. CO vs LJ - 100BBs
+                 ["23456789TJQ","23456789TJQ","456789TJQ","89TJ","89T","789","678","67","56","45","34","","","TJQK","TJQ","TJ","T","","","","","","","",""], // 16. Button vs LJ - 100BBs
+                 ["23456789TJ","23456789J","56789TJQ","89T","89T","89","78","67","6","5","4","","","TJQK","TJQ","TJ","T","","","","","","","",""],           // 17. SB vs LJ - 100BBs
+                 ["23456789TJ","23456789TJQ","23456789TJQ","23456789TJ","23456789T","23456789","2345678","234567","3456","2345","234","23","2","23456789TJQK","56789TJQ","689TJ","89T","89","78","67","56","45","34","",""], // 18. BB vs LJ - 100BBs
+                 ["23456789TJQ","23456789TJQ","56789TJQ","9TJ","89T","89","78","7","6","5","4","","","TJQK","JQ","TJ","T","","","","","","","",""],              // 19. CO vs HJ - 100BBs
+                 ["23456789TJQ","23456789TJ","3456789TJQ","56789TJ","89T","789","678","67","56","45","34","","","TJQK","TJQ","TJ","T","","","","","","","",""], // 20. Button vs HJ - 100BBs
+                 ["23456789TJ","23456789TJ","456789TJQ","56789T","89T","789","78","67","6","5","4","","","TJQK","TJQ","TJ","T","","","","","","","",""], // 21. SB vs HJ - 100BBs
+				 ["23456789TJ","23456789TJ","23456789TJQ","23456789TJ","23456789T","23456789","2345678","234567","23456","2345","234","23","2","23456789TJQ","456789TJQ","6789TJ","89T","789","78","67","56","45","34","",""], // 22. BB vs HJ - 100BBs
+				 ["23456789TJQ","23456789TJ","3456789TJQ","56789TJ","789T","789","678","67","56","45","34","","","9TJQK","TJQ","TJ","T","","","","","","","",""], // 23. Button vs CO - 100BBs
+				 ["23456789TJ","23456789TJ","23456789TJQ","56789J","789","789","78","67","56","5","4","","","9TJQK","TJQ","TJ","T","","","","","","","",""], // 24. SB vs CO - 100BBs
+				 ["23456789T","23456789TJ","23456789TJQ","23456789TJ","23456789T","2345678","2345678","234567","23456","2345","234","23","2","23456789TJQ","23456789TJQ","456789TJ","6789T","789","678","67","56","45","34","3",""], // 25. BB vs CO - 100BBs
+				 ["23456789T","2346789T","23456789TJQ","456789TJ","6789T","78","678","67","56","45","4","","","5789TJQ","9TJQ","TJ","9T","9","","","","","","",""], // 26. SB vs Button - 100BBs
+				 ["23456789","23456789T","23456789T","23456789TJ","23456789T","2345678","234567","23456","23456","2345","234","23","2","23456789TJQ","23456789TJQ","23456789TJ","3456789T","6789","678","567","56","45","34","3",""], // 27. BB vs Button - 100BBs
+                 ["23456789TJ","23456789TJ","23456789TJQ","23456789TJ","23456789T","23456789","2345678","34567","3456","2345","234","23","2","23456789TJQ","456789TJQ","6789TJ","789T","789","78","67","6","5","4","",""]];// 28. BB vs SB - 100BBs
+
+   //1. PAIRS
+   //2. ACE SUITED
+   //3. KING SUITED
+   //4. QUEEN SUITED
+   //5. JACK SUITED
+   //6. TEN SUITED
+   //7. NINE SUITED
+   //8. EIGHT SUITED
+   //9. SEVEN SUITED
+   //10.SIX SUITED
+   //11.FIVE SUITED
+   //12.FOUR SUITED
+   //13.THREE SUITED
+   //14.ACE OFF-SUITED
+   //15.KING OFF-SUITED
+   //16.QUEEN OFF-SUITED
+   //17.JACK OFF-SUITED
+   //18.TEN OFF-SUITED
+   //19.NINE OFF-SUITED
+   //20.EIGHT OFF-SUITED
+   //21.SEVEN OFF-SUITED
+   //22.SIX OFF-SUITED
+   //23.FIVE OFF-SUITED
+   //24.FOUR OFF-SUITED
+   //25.THREE OFF-SUITED
+
+   return ranges[parseInt(scenary) - 1][parseInt(typeOfCards) - 1];
+}
+
+function checkAnswer(action){
+   var card1 = document.getElementById("cardone").value;
+   var card2 = document.getElementById("cardtwo").value;
+   var cardsToRaise = "";
+   var cardsToCall = "";
+   var scenary = document.getElementById("scenary").value;
+
+   if (scenary == "A"){
+      scenary = "10";
+   }
+   if (scenary == "B"){
+      scenary = "11";
+   }
+   if (scenary == "C"){
+      scenary = "12";
+   }
+   if (scenary == "D"){
+      scenary = "13";
+   }
+   if (scenary == "E"){
+      scenary = "14";
+   }
+   if (scenary == "F"){
+      scenary = "15";
+   }
+   if (scenary == "G"){
+      scenary = "16";
+   }
+   if (scenary == "H"){
+      scenary = "17";
+   }
+   if (scenary == "I"){
+      scenary = "18";
+   }
+   if (scenary == "J"){
+      scenary = "19";
+   }
+   if (scenary == "K"){
+      scenary = "20";
+   }
+   if (scenary == "L"){
+      scenary = "21";
+   }
+   if (scenary == "M"){
+      scenary = "22";
+   }
+   if (scenary == "N"){
+      scenary = "23";
+   }
+   if (scenary == "O"){
+      scenary = "24";
+   }
+   if (scenary == "P"){
+      scenary = "25";
+   }
+   if (scenary == "Q"){
+      scenary = "26";
+   }
+   if (scenary == "R"){
+      scenary = "27";
+   }
+   if (scenary == "S"){
+      scenary = "28";
+   }
+
+   //PAIRS
+   if (card1.charAt(0) == card2.charAt(0)){
+      cardsToRaise = getRangeOfRaise(1,scenary);
+      cardsToCall = getRangeOfCall(1,scenary);
+   } else if (card1.charAt(1) == card2.charAt(1)){ //SUITEDS
+      if (card1.charAt(0) == "A" || card2.charAt(0) == "A"){ //ACES
+         cardsToRaise = getRangeOfRaise(2,scenary);
+         cardsToCall = getRangeOfCall(2,scenary);
+      } else if (card1.charAt(0) == "K" || card2.charAt(0) == "K"){ //KINGS
+         cardsToRaise = getRangeOfRaise(3,scenary);
+         cardsToCall = getRangeOfCall(3,scenary);
+      } else if (card1.charAt(0) == "Q" || card2.charAt(0) == "Q"){ //QUEENS
+         cardsToRaise = getRangeOfRaise(4,scenary);
+         cardsToCall = getRangeOfCall(4,scenary);
+      } else if (card1.charAt(0) == "J" || card2.charAt(0) == "J"){ //JACKS
+         cardsToRaise = getRangeOfRaise(5,scenary);
+         cardsToCall = getRangeOfCall(5,scenary);
+      } else if (card1.charAt(0) == "T" || card2.charAt(0) == "T"){ //TENS
+         cardsToRaise = getRangeOfRaise(6,scenary);
+         cardsToCall = getRangeOfCall(6,scenary);
+      } else if (card1.charAt(0) == "9" || card2.charAt(0) == "9"){ //NINES
+         cardsToRaise = getRangeOfRaise(7,scenary);
+         cardsToCall = getRangeOfCall(7,scenary);
+      } else if (card1.charAt(0) == "8" || card2.charAt(0) == "8"){ //EIGHTS
+         cardsToRaise = getRangeOfRaise(8,scenary);
+         cardsToCall = getRangeOfCall(8,scenary);
+      } else if (card1.charAt(0) == "7" || card2.charAt(0) == "7"){ //SEVENS
+         cardsToRaise = getRangeOfRaise(9,scenary);
+         cardsToCall = getRangeOfCall(9,scenary);
+      } else if (card1.charAt(0) == "6" || card2.charAt(0) == "6"){ //SIXES
+         cardsToRaise = getRangeOfRaise(10,scenary);
+         cardsToCall = getRangeOfCall(10,scenary);
+      } else if (card1.charAt(0) == "5" || card2.charAt(0) == "5"){ //FIVES
+         cardsToRaise = getRangeOfRaise(11,scenary);
+         cardsToCall = getRangeOfCall(11,scenary);
+      } else if (card1.charAt(0) == "4" || card2.charAt(0) == "4"){ //FOURS
+         cardsToRaise = getRangeOfRaise(12,scenary);
+         cardsToCall = getRangeOfCall(12,scenary);
+      } else if (card1.charAt(0) == "3" || card2.charAt(0) == "3"){ //THREES
+	     cardsToRaise = getRangeOfRaise(13,scenary);
+         cardsToCall = getRangeOfCall(13,scenary);
+      }
+   } else if (card1.charAt(1) != card2.charAt(1)){ //OFF-SUITEDS
+      if (card1.charAt(0) == "A" || card2.charAt(0) == "A"){ //ACES
+	     cardsToRaise = getRangeOfRaise(14,scenary);
+		 cardsToCall = getRangeOfCall(14,scenary);
+	  } else if (card1.charAt(0) == "K" || card2.charAt(0) == "K"){ //KINGS
+		 cardsToRaise = getRangeOfRaise(15,scenary);
+		 cardsToCall = getRangeOfCall(15,scenary);
+	  } else if (card1.charAt(0) == "Q" || card2.charAt(0) == "Q"){ //QUEENS
+		 cardsToRaise = getRangeOfRaise(16,scenary);
+		 cardsToCall = getRangeOfCall(16,scenary);
+	  } else if (card1.charAt(0) == "J" || card2.charAt(0) == "J"){ //JACKS
+		 cardsToRaise = getRangeOfRaise(17,scenary);
+		 cardsToCall = getRangeOfCall(17,scenary);
+	  } else if (card1.charAt(0) == "T" || card2.charAt(0) == "T"){ //TENS
+		 cardsToRaise = getRangeOfRaise(18,scenary);
+		 cardsToCall = getRangeOfCall(18,scenary);
+	  } else if (card1.charAt(0) == "9" || card2.charAt(0) == "9"){ //NINES
+		 cardsToRaise = getRangeOfRaise(19,scenary);
+		 cardsToCall = getRangeOfCall(19,scenary);
+	  } else if (card1.charAt(0) == "8" || card2.charAt(0) == "8"){ //EIGHTS
+		 cardsToRaise = getRangeOfRaise(20,scenary);
+		 cardsToCall = getRangeOfCall(20,scenary);
+	  } else if (card1.charAt(0) == "7" || card2.charAt(0) == "7"){ //SEVENS
+		 cardsToRaise = getRangeOfRaise(21,scenary);
+		 cardsToCall = getRangeOfCall(21,scenary);
+	  } else if (card1.charAt(0) == "6" || card2.charAt(0) == "6"){ //SIXES
+		 cardsToRaise = getRangeOfRaise(22,scenary);
+		 cardsToCall = getRangeOfCall(22,scenary);
+	  } else if (card1.charAt(0) == "5" || card2.charAt(0) == "5"){ //FIVES
+		 cardsToRaise = getRangeOfRaise(23,scenary);
+	 	 cardsToCall = getRangeOfCall(23,scenary);
+	  } else if (card1.charAt(0) == "4" || card2.charAt(0) == "4"){ //FOURS
+		 cardsToRaise = getRangeOfRaise(24,scenary);
+		 cardsToCall = getRangeOfCall(24,scenary);
+	  } else if (card1.charAt(0) == "3" || card2.charAt(0) == "3"){ //THREES
+		 cardsToRaise = getRangeOfRaise(25,scenary);
+		 cardsToCall = getRangeOfCall(25,scenary);
+	  }
+   }
+
+   //if (scenary == "11"){
+   //   alert("RAISE - " + cardsToRaise + " CALL - " + cardsToCall);
+   //}
+
+   if (action == "raise" && cardsToRaise.indexOf(card1.charAt(0)) > -1){
+      return true;
+   } else if (action == "raise" && cardsToRaise.indexOf(card2.charAt(0)) > -1){
+   	  return true;
+   } else if (action == "call" && cardsToCall.indexOf(card1.charAt(0)) > -1){
+      return true;
+   } else if (action == "call" && cardsToCall.indexOf(card2.charAt(0)) > -1){
+   	  return true;
+   } else if (action == "fold" && cardsToRaise.indexOf(card1.charAt(0)) == -1 && cardsToRaise.indexOf(card2.charAt(0)) == -1 && cardsToCall.indexOf(card1.charAt(0)) == -1 && cardsToCall.indexOf(card2.charAt(0)) == -1){
+   	  return true;
+   } else{
+   	  return false;
+   }
+
+}
+
+function setScore(answer){
+   if (checkAnswer(answer)){
+         var actualScore = document.getElementById('correctAnswers').innerHTML;
+         document.getElementById('correctAnswers').innerHTML = parseInt(actualScore) + 1;
+      }
+      else{
+         var actualScore = document.getElementById('wrongAnswers').innerHTML;
+         document.getElementById('wrongAnswers').innerHTML = parseInt(actualScore) + 1;
+         alert("OPS, RESPOSTA ERRADA!");
+   }
+}
+
+function fold(){
+   setScore("fold");
+   setCards();
+}
+
+function call(){
+   setScore("call");
+   setCards();
+}
+
+function raise(){
+   setScore("raise");
+   setCards();
+}
+</script>
+</body>
+</html>
